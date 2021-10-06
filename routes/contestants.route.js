@@ -1,7 +1,8 @@
 const express = require('express');
-const contestants = require('../services/contestants');
 const router = new express.Router();
- 
+
+const contestants = require('../services/contestants');
+
 router.get('/', async (req, res, next) => {
   let options = { 
   };

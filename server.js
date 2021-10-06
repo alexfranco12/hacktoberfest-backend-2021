@@ -1,5 +1,4 @@
 const express = require('express'),
-    bodyParser = require('body-parser'),
     cookieParser = require('cookie-parser'),
     log = require('morgan'),
     path = require('path'),
@@ -18,13 +17,10 @@ app.use(cors());
 app.use(log('tiny'));
 
 // parse application/json
-app.use(bodyParser.json());
-
-// parse raw text
-app.use(bodyParser.text());
+app.use(express.json());
 
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // parse multipart/form-data
@@ -33,7 +29,12 @@ app.use(express.static('public'));
 
 app.use(cookieParser());
 
-require('./routes')(app);
+app.get("/", (req, res) => {
+    res.redirect("/contestants");
+});
+
+require('./controllers')(app);
+// require('./routes')(app);
 
 // catch 404
 app.use((req, res, next) => {
