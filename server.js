@@ -29,12 +29,7 @@ app.use(express.static('public'));
 
 app.use(cookieParser());
 
-app.get("/", (req, res) => {
-    res.redirect("/contestants");
-});
-
-require('./controllers')(app);
-// require('./routes')(app);
+require('./routes')(app);
 
 // catch 404
 app.use((req, res, next) => {
