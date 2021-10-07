@@ -12,6 +12,11 @@ const ContestantSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Ensure virtual fields are serialised.
+ContestantSchema.set('toJSON', {
+  virtuals: true
+});
+
 const Contestant = mongoose.model("Contestant", ContestantSchema);
 
 module.exports = Contestant;

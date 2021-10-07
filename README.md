@@ -4,13 +4,20 @@
 
 
 ## About
-
+The challenge is to build an API that allows a user to create, read, update, delete and upvote costume party contestants.
 
 ## Technologies Used
+- Node
 - Express
 - MongoDB
 - Mongoose
 
+**NPM Packages**
+- body-parser
+- cookie-parser
+- cors
+- morgan
+- multer
 
 ## Minimum Viable Product
 Endpoints:
