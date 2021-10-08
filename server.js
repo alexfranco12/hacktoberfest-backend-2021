@@ -1,7 +1,6 @@
 const express = require('express'),
     cookieParser = require('cookie-parser'),
     log = require('morgan'),
-    path = require('path'),
     cors = require('cors'),
     multer = require('multer'),
     upload = multer(),
