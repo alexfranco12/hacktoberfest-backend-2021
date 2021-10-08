@@ -1,59 +1,54 @@
 const Contestant = require("../models/contestant-model");
+
 /*
-* CONTROLLERS
+*  CONTESTANT CONTROLLERS
 */
 
-// Display list of all contestants
-exports.index = (req, res, next) => {
+// READ: display list of all contestants
+exports.index = (req, res) => {
   Contestant.find({})
-    .then((contestants) => {
+    .exec((err, contestants) => {
       res.status("200").json(contestants)
     })
-    .catch(next);
 };
 
 // CREATE: create a new contestant in the DB
-exports.contestant_create = (req, res, next) => {
-  body = req.body
-  console.log(body)
-  Contestant.create({
-    city: body.city,
-    costumeImgUrl: body.costumeImgUrl,
-    costumeTitle: body.costumeTitle,
-    country: body.country,
-    name: body.name,
-    votes: 0,
+exports.contestant_create = (req, res) => {
+  const newContestant = new Contestant(req.body);
+  newContestant.save((err, saved) => {
+    if (!err) {
+      Contestant
+        .findOneAndUpdate(
+          {
+            _id: saved._id
+          }, {
+            $set: {votes: 0}
+          }, {
+            new: true
+          })
+        .exec((err, contestant) => {
+          res.status("201").send({id: contestant._id})
+        });
+    } else {
+      console.log(err)
+    }
   })
-  .then((contestant) => {
-    res.status("201")
-    res.send({id: contestant._id})
-  })
-  .catch(next);
 };
 
-// Find contestant by id #
-exports.contestant_detail = (req, res, next) => {
+// READ: find contestant by id #
+exports.contestant_detail = (req, res) => {
   Contestant.findById(req.params.id)
   .then((contestant) => {
     if (!contestant) {
       res.status(404).send({status: 'error'})
     } else {
-      res.send({
-        id: contestant._id,
-        name: contestant.name,
-        costumeTitle: contestant.costumeTitle,
-        costumeImgUrl: contestant.costumeImgUrl,
-        city: contestant.city,
-        country: contestant.country,
-        votes: contestant.votes
-      })
+      res.status(200).json(contestant)
     }
-  })
-  .catch(next);
+  });
 };
 
 // UPDATE: update a contestant in the DB
-exports.contestant_update = (req, res, next) => {
+exports.contestant_update = (req, res) => {
   Contestant.findOneAndUpdate(
     { 
       _id: req.params.id 
@@ -61,13 +56,13 @@ exports.contestant_update = (req, res, next) => {
     { 
       new: true 
     })
-    .then(() => {
+    .exec(() => {
       res.status(200).send({status: 'ok'})
-    })
-    .catch(next);
-}
+    });
+};
 
-exports.contestant_upvote = (req, res, next) => {
+// UPDATE: upvote contestant by increment of 1
+exports.contestant_upvote = (req, res) => {
   Contestant.findOneAndUpdate(
     { 
       _id: req.params.id 
@@ -77,19 +72,18 @@ exports.contestant_upvote = (req, res, next) => {
     { 
       new: true 
     })
-    .then((contestant) => {
+    .exec((contestant) => {
       res.status(200).send({
         status: 'ok',
         votes: contestant.votes
       })
-    })
-    .catch(next);
+    });
 };
 
-exports.contestant_delete = (req, res, next) => {
+// DELETE: remove contestant by id #
+exports.contestant_delete = (req, res) => {
   Contestant.findOneAndDelete({ _id: req.params.id })
-  .then(() => {
+  .exec(() => {
     res.status(200).send({status: 'ok'})
-  })
-  .catch(next);
+  });
 };
