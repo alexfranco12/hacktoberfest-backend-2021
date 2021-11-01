@@ -63,16 +63,17 @@ exports.contestant_update = (req, res) => {
 
 // UPDATE: upvote contestant by increment of 1
 exports.contestant_upvote = (req, res) => {
+  console.log(req.params)
   Contestant.findOneAndUpdate(
     { 
-      _id: req.params.id 
+      _id: req.params.id
     },{
       $inc: {'votes': 1}
     }, 
     { 
       new: true 
     })
-    .exec((contestant) => {
+    .then((contestant) => {
       res.status(200).send({
         status: 'ok',
         votes: contestant.votes
